@@ -30,6 +30,16 @@ public class UserController {
         }
     }
 
+    @GetMapping("/confirm-account/{token}")
+    public String confirmRegistration(@PathVariable String token) {
+        try {
+            userService.confirmRegistration(token);
+            return "всё тру";
+        } catch (Exception e) {
+            return "всё фолз";
+        }
+    }
+
     @GetMapping("/all")
     public List<User> getAllUsers(){
         return userService.findAll();
