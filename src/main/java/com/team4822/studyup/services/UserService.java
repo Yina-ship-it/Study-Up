@@ -42,7 +42,7 @@ public class UserService implements UserDetailsService{
                 .collect(Collectors.toList());
     }
 
-    public User addUser(User user) throws Exception{
+    public void addUser(User user) throws Exception{
         User userFormDb = userRepository.findByUsername(user.getUsername());
         if (userFormDb != null){
             throw new Exception("user exist");
@@ -57,14 +57,13 @@ public class UserService implements UserDetailsService{
         user.setRoles(Collections.singleton(Role.USER));
         userRepository.save(user);
         confirmationTokenService.saveConfirmationToken(token);
-        return user;
     }
 
     public void changeEmail(String username, String newEmail){
         User user = userRepository.findByUsername(username);
         ConfirmationToken token = new ConfirmationToken(user);
-        emailService.sendMail(user.getEmail(), "Токен для подтверждения почты", token.getConfirmationToken());
         user.setEmail(newEmail);
+        emailService.sendMail(user.getEmail(), "Токен для подтверждения почты", token.getConfirmationToken());
         user.setConfirmed(false);
         userRepository.save(user);
         confirmationTokenService.saveConfirmationToken(token);

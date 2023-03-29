@@ -24,8 +24,8 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         try {
-            User registeredUser = userService.addUser(user);
-            return ResponseEntity.ok(registeredUser);
+            userService.addUser(user);
+            return ResponseEntity.status(HttpStatus.OK).body("Пользователь успешно зарегистрирован");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -36,19 +36,19 @@ public class UserController {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             userService.changeEmail(authentication.getName(), newEmail);
-            return ResponseEntity.ok(HttpStatus.OK);
+            return ResponseEntity.status(HttpStatus.OK).body("Адрес электронной почты успешно изменен");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
-    @GetMapping("/confirm-account/{token}")
-    public HttpStatus confirmRegistration(@PathVariable String token) {
+    @GetMapping("/confirm-email/{token}")
+    public ResponseEntity<?> confirmRegistration(@PathVariable String token) {
         try {
             userService.confirmRegistration(token);
-            return HttpStatus.OK;
+            return ResponseEntity.status(HttpStatus.OK).body("Адрес электронной почты подтвержден");
         } catch (Exception e) {
-            return HttpStatus.BAD_REQUEST;
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
