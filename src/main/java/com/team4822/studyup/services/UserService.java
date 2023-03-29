@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -56,6 +57,16 @@ public class UserService implements UserDetailsService{
         userRepository.save(user);
         confirmationTokenService.saveConfirmationToken(token);
         return user;
+    }
+
+    public void changeEmail(String username, String newEmail){
+        User user = userRepository.findByUsername(username);
+        ConfirmationToken token = new ConfirmationToken(user);
+        System.out.println(token.getConfirmationToken());
+        user.setEmail(newEmail);
+        user.setConfirmed(false);
+        userRepository.save(user);
+        confirmationTokenService.saveConfirmationToken(token);
     }
 
     public void confirmRegistration(String token) throws Exception {

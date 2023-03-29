@@ -2,9 +2,10 @@ package com.team4822.studyup.controllers;
 
 import com.team4822.studyup.models.authentication.User;
 import com.team4822.studyup.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
@@ -30,13 +31,24 @@ public class UserController {
         }
     }
 
+    @PutMapping("/email")
+    public ResponseEntity<?> changeEmail(String newEmail){
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            userService.changeEmail(authentication.getName(), newEmail);
+            return ResponseEntity.ok(HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
     @GetMapping("/confirm-account/{token}")
-    public String confirmRegistration(@PathVariable String token) {
+    public HttpStatus confirmRegistration(@PathVariable String token) {
         try {
             userService.confirmRegistration(token);
-            return "всё тру";
+            return HttpStatus.OK;
         } catch (Exception e) {
-            return "всё фолз";
+            return HttpStatus.BAD_REQUEST;
         }
     }
 
