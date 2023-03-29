@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
-import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -21,11 +20,13 @@ public class UserService implements UserDetailsService{
 
     private final UserRepository userRepository;
     private final ConfirmationTokenService confirmationTokenService;
+    private final EmailService emailService;
 
     @Inject
-    public UserService(UserRepository userRepository, ConfirmationTokenService confirmationTokenService) {
+    public UserService(UserRepository userRepository, ConfirmationTokenService confirmationTokenService, EmailService emailService) {
         this.userRepository = userRepository;
         this.confirmationTokenService = confirmationTokenService;
+        this.emailService = emailService;
     }
 
     @Override
@@ -51,7 +52,7 @@ public class UserService implements UserDetailsService{
         }
 
         ConfirmationToken token = new ConfirmationToken(user);
-        System.out.println(token.getConfirmationToken());
+        emailService.sendMail(user.getEmail(), "Токен для подтверждения почты", token.getConfirmationToken());
         user.setConfirmed(false);
         user.setRoles(Collections.singleton(Role.USER));
         userRepository.save(user);
@@ -62,7 +63,7 @@ public class UserService implements UserDetailsService{
     public void changeEmail(String username, String newEmail){
         User user = userRepository.findByUsername(username);
         ConfirmationToken token = new ConfirmationToken(user);
-        System.out.println(token.getConfirmationToken());
+        emailService.sendMail(user.getEmail(), "Токен для подтверждения почты", token.getConfirmationToken());
         user.setEmail(newEmail);
         user.setConfirmed(false);
         userRepository.save(user);
