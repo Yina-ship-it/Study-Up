@@ -20,7 +20,7 @@ The backend part of StudyUp, a website designed for student competition in schoo
         "message": "Пользователь успешно зарегистрирован"
     }
     
-## Подтверждение почты пользователя
+## Смена почты пользователя
 ### Запрос
 `PUT /email`
 
