@@ -3,7 +3,7 @@ The backend part of StudyUp, a website designed for student competition in schoo
 
 ## Регистрация пользователя
 ### Запрос
-`POST /register`
+`POST /api/auth/register`
 
     {
         "username": "example",
@@ -19,10 +19,28 @@ The backend part of StudyUp, a website designed for student competition in schoo
         "status": "success",
         "message": "Пользователь успешно зарегистрирован"
     }
-    
+
+## Проверка на существование пользователя
+### Запрос
+`GET /api/auth/login
+
+    {
+        "username": "example",
+        "password": "password123",
+    }
+
+### Требуется авторизация
+Нет.
+### Ответ
+
+    {
+        "status": "success",
+        "message": true
+    }
+
 ## Смена почты пользователя
 ### Запрос
-`PUT /email`
+`PUT /api/auth/email`
 
     {
         "new_email": "new@example.com"
@@ -39,9 +57,9 @@ The backend part of StudyUp, a website designed for student competition in schoo
     
 ## Подтверждение почты пользователя
 ### Запрос
-`GET /confirm-email/{token}`
+`GET /api/auth/confirm-email/{token}`
 ### Требуется авторизация
-Да.
+Нет.
 ### Ответ
 
     {

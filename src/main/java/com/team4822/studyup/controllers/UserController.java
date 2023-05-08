@@ -12,7 +12,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/user")
 public class UserController {
     private final UserService userService;
 
@@ -21,32 +21,11 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody User user) {
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getUser(@PathVariable long id){
         try {
-            userService.addUser(user);
-            return ResponseEntity.status(HttpStatus.OK).body("Пользователь успешно зарегистрирован");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    }
-
-    @PutMapping("/email")
-    public ResponseEntity<?> changeEmail(String newEmail){
-        try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            userService.changeEmail(authentication.getName(), newEmail);
-            return ResponseEntity.status(HttpStatus.OK).body("Адрес электронной почты успешно изменен");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    }
-
-    @GetMapping("/confirm-email/{token}")
-    public ResponseEntity<?> confirmRegistration(@PathVariable String token) {
-        try {
-            userService.confirmRegistration(token);
-            return ResponseEntity.status(HttpStatus.OK).body("Адрес электронной почты подтвержден");
+            User user = userService.findById(id);
+            return ResponseEntity.status(HttpStatus.OK).body(user);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
