@@ -17,6 +17,8 @@ public class Question {
 
     private String text;
 
+
+
     @ElementCollection
     @CollectionTable(name="attachments", joinColumns=@JoinColumn(name="question_id"))
     @Column(name="url")

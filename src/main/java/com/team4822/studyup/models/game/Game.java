@@ -1,7 +1,13 @@
 package com.team4822.studyup.models.game;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.team4822.studyup.models.authentication.User;
+import com.team4822.studyup.models.game.enums.GameStatus;
+import com.team4822.studyup.models.game.enums.GameType;
+import com.team4822.studyup.models.quiz.Topic;
 import jakarta.persistence.*;
 
 @Entity
@@ -16,20 +22,38 @@ public class Game {
     @Enumerated(EnumType.STRING)
     private GameStatus status;
 
-    @JsonIgnoreProperties(ignoreUnknown = true, value = {"id", "username"})
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     @ManyToOne
     @JoinColumn(name = "player_1_id")
     private User player1;
 
-    @JsonIgnoreProperties(ignoreUnknown = true, value = {"id", "username"})
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     @ManyToOne
     @JoinColumn(name = "player_2_id")
     private User player2;
 
-    public Game(GameType type, GameStatus status, User player1) {
+    @OneToOne(mappedBy = "game")
+    private GameMap map;
+
+    @ManyToOne
+    @JoinColumn(name = "topic_id")
+    private Topic topic;
+
+    public Game(GameType type, GameStatus status, User player1, User player2) {
         this.type = type;
         this.status = status;
         this.player1 = player1;
+        this.player2 = player2;
+    }
+
+    public GameMap getMap() {
+        return map;
+    }
+
+    public void setMap(GameMap map) {
+        this.map = map;
     }
 
     public Game() {
