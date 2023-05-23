@@ -31,8 +31,8 @@ public class UserService implements UserDetailsService{
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User myUser = userRepository.findByUsername(username);
-        return new org.springframework.security.core.userdetails.User(myUser.getUsername(), myUser.getPassword(),
+        User myUser = userRepository.findByEmail(username);
+        return new org.springframework.security.core.userdetails.User(myUser.getEmail(), myUser.getPassword(),
                 mapRolesToAuthorities(myUser.getRoles()));
     }
 
@@ -43,12 +43,9 @@ public class UserService implements UserDetailsService{
     }
 
     public void addUser(User user) throws Exception{
-        User userFormDb = userRepository.findByUsername(user.getUsername());
+        User userFormDb = userRepository.findByEmail(user.getEmail());
         if (userFormDb != null){
             throw new Exception("user exist");
-        }
-        if (userRepository.existsByEmail(user.getEmail())){
-            throw new Exception("Email already exists!");
         }
 
         ConfirmationToken token = new ConfirmationToken(user);
@@ -59,8 +56,8 @@ public class UserService implements UserDetailsService{
         confirmationTokenService.saveConfirmationToken(token);
     }
 
-    public void changeEmail(String username, String newEmail){
-        User user = userRepository.findByUsername(username);
+    public void changeEmail(String email, String newEmail){
+        User user = userRepository.findByEmail(email);
         ConfirmationToken token = new ConfirmationToken(user);
         user.setEmail(newEmail);
         emailService.sendMail(user.getEmail(), "Токен для подтверждения почты", token.getConfirmationToken());

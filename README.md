@@ -25,7 +25,7 @@ The backend part of StudyUp, a website designed for student competition in schoo
 `GET /api/auth/login
 
     {
-        "username": "example",
+        "email": "example@example.com",
         "password": "password123",
     }
 
@@ -47,7 +47,7 @@ The backend part of StudyUp, a website designed for student competition in schoo
     }
     
 ### Требуется авторизация
-Да.
+Да. (почта, пароль)
 ### Ответ
 
     {

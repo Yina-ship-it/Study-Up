@@ -35,8 +35,8 @@ public class AuthController {
     @GetMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody User user) {
         try {
-            UserDetails userDetails = userService.loadUserByUsername(user.getUsername());
-
+            UserDetails userDetails = userService.loadUserByUsername(user.getEmail());
+            System.out.println(userDetails);
             return ResponseEntity.status(HttpStatus.OK).body(userDetails.getPassword().equals(user.getPassword()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.OK).body(false);
