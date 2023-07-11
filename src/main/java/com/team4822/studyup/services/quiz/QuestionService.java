@@ -3,12 +3,14 @@ package com.team4822.studyup.services.quiz;
 import com.team4822.studyup.models.quiz.Answer;
 import com.team4822.studyup.models.quiz.QType;
 import com.team4822.studyup.models.quiz.Question;
+import com.team4822.studyup.models.quiz.Topic;
 import com.team4822.studyup.repositories.quiz.QuestionRepository;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class QuestionService {
@@ -53,5 +55,16 @@ public class QuestionService {
         Answer answer = new Answer(text, correct, question);
         answerService.saveAnswer(answer);
         return answer;
+    }
+
+    public Question findRandomQuestion(Topic topic, int difficulty){
+        Random random = new Random();
+        List<Question> possibleQuestions = topic.getQuestions().stream()
+                .filter(question -> question.getDifficulty() == difficulty)
+                .toList();
+
+        return possibleQuestions.stream()
+                .skip(random.nextInt(possibleQuestions.size()))
+                .findFirst().get();
     }
 }

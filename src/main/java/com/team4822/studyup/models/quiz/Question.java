@@ -17,9 +17,9 @@ public class Question {
 
     private String text;
 
+    private int difficulty;
 
-
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name="attachments", joinColumns=@JoinColumn(name="question_id"))
     @Column(name="url")
     private Set<String> attachments;
@@ -32,19 +32,29 @@ public class Question {
     @JoinColumn(name = "topic_id")
     private Topic topic;
 
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "question", fetch = FetchType.EAGER)
     private List<Answer> answers;
 
-    public Question(String questionText, QType type, Topic topic) {
+    public Question(String questionText, int difficulty, QType type, Topic topic) {
         this.text = questionText;
         this.attachments = new HashSet<>();
         this.type = type;
         this.topic = topic;
         answers = new ArrayList<>();
+
+        this.difficulty = difficulty;
     }
 
     public Question() {
 
+    }
+
+    public int getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(int difficulty) {
+        this.difficulty = difficulty;
     }
 
     public Set<String> getAttachments() {
@@ -94,4 +104,5 @@ public class Question {
     public void setAnswers(List<Answer> answers) {
         this.answers = answers;
     }
+
 }

@@ -23,7 +23,7 @@ public class Topic {
     private Subject subject;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "topic")
+    @OneToMany(mappedBy = "topic", fetch = FetchType.EAGER)
     private List<Question> questions;
 
     public Topic(String title, Subject subject) {
