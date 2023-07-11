@@ -1,5 +1,6 @@
 package com.team4822.studyup.models.authentication;
 
+import com.team4822.studyup.models.game.PlayerUser;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
@@ -13,7 +14,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "username")
+    @Column(name = "username", unique = true, nullable = false)
     private String username;
 
     @Column(name = "password", nullable = false)
@@ -29,6 +30,9 @@ public class User {
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = ("user_id")))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles = new HashSet<>();
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private PlayerUser player;
 
     public User()
     {}

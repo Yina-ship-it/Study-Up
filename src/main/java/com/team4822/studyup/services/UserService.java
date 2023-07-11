@@ -3,7 +3,9 @@ package com.team4822.studyup.services;
 import com.team4822.studyup.models.authentication.ConfirmationToken;
 import com.team4822.studyup.models.authentication.Role;
 import com.team4822.studyup.models.authentication.User;
+import com.team4822.studyup.models.game.PlayerUser;
 import com.team4822.studyup.repositories.UserRepository;
+import com.team4822.studyup.repositories.game.PlayerUserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,12 +22,14 @@ public class UserService implements UserDetailsService{
 
     private final UserRepository userRepository;
     private final ConfirmationTokenService confirmationTokenService;
+    private final PlayerUserRepository playerUserRepository;
     private final EmailService emailService;
 
     @Inject
-    public UserService(UserRepository userRepository, ConfirmationTokenService confirmationTokenService, EmailService emailService) {
+    public UserService(UserRepository userRepository, ConfirmationTokenService confirmationTokenService, PlayerUserRepository playerUserRepository, EmailService emailService) {
         this.userRepository = userRepository;
         this.confirmationTokenService = confirmationTokenService;
+        this.playerUserRepository = playerUserRepository;
         this.emailService = emailService;
     }
 
@@ -63,6 +67,7 @@ public class UserService implements UserDetailsService{
         emailService.sendMail(user.getEmail(), "Токен для подтверждения почты", token.getConfirmationToken());
         user.setConfirmed(false);
         userRepository.save(user);
+        playerUserRepository.save(new PlayerUser(user));
         confirmationTokenService.saveConfirmationToken(token);
     }
 

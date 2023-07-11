@@ -1,5 +1,6 @@
 package com.team4822.studyup.models.game;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.team4822.studyup.models.authentication.User;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -11,6 +12,7 @@ import jakarta.persistence.OneToOne;
 public class PlayerUser extends Player {
     private double rating;
 
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
