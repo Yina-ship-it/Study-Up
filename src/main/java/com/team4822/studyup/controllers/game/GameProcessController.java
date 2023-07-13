@@ -109,6 +109,9 @@ public class GameProcessController {
             if (player == null)
                 throw new Exception("Player not found!");
 
+            if (properties.getCurrentPlayer().getId() != player.getId()
+                    && properties.getCurrentNode().getPlayer() == null)
+                throw new Exception("The other player's answer was expected!");
             Node node = map.getNodes().stream()
                     .filter(node1 -> node1.getId() == properties.getCurrentNode().getId())
                     .findFirst()
